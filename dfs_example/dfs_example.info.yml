@@ -1,0 +1,9 @@
+name: 'DFS Example'
+type: module
+description: 'Demo Framework Scenario for creating a new scenario.'
+core_version_requirement: ^8.8 || ^9
+package: 'Demo Framework Scenarios'
+scenario: dfs_example
+dependencies:
+  - df_tools_cohesion
+  - df_tools_content

@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Set up the Example Scenario.
+ */
+
+use Drupal\cohesion\Drush\DX8CommandHelpers;
+/**
+ * Implements hook_install().
+ */
+function dfs_example_install() {
+  $config_factory = \Drupal::configFactory();
+  // Set the default and admin theme.
+  $config_factory
+    ->getEditable('system.theme')
+    ->set('default', 'cohesion_theme')
+    ->set('admin', 'acquia_claro')
+    ->save(TRUE);
+
+  // Sets front page and site name.
+  $config_factory
+    ->getEditable('system.site')
+    ->set('page.front', '/home')
+    ->set('name', "Home")
+    ->save(TRUE);
+
+  // Delete unwanted config.
+  $deleted = [
+    'cohesion_elements.cohesion_component_category.cpt_cat_general_components',
+    'cohesion_elements.cohesion_component_category.cpt_cat_media_components',
+    'cohesion_elements.cohesion_component_category.cpt_cat_interactive_components'
+  ];
+  foreach ($deleted as $item) {
+    if ($config = $config_factory->getEditable($item)) {
+      $config->delete();
+    }
+  }
+
+  // Imports assets and rebuild element styles for Site Studio.
+  DX8CommandHelpers::import();
+
+  // Clear cached info causing post-install class discovery errors.
+  drupal_flush_all_caches();
+}
